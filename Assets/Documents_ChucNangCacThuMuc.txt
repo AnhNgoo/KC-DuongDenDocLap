@@ -1,0 +1,18 @@
+Chức Năng Các Thư Mục
+    /Scenes                   // Các scene trong game
+    /Scripts                  // Các script C#
+    /Prefabs                  // Prefabs dùng nhiều lần
+    /Materials                // Material, shader
+    /Textures                 // Hình ảnh, texture
+    /Animations               // Animations, Animator Controller
+    /Audio                    // Âm thanh và nhạc nền
+    /Fonts                    // Fonts tùy chỉnh
+    /UI                       // Các UI Canvas, Panel, Button, etc.
+    /Plugins                  // Plugin, thư viện ngoài
+    /Shaders                  // Shader tùy chỉnh
+    /ParticleSystems          // Hệ thống particle
+    /Lighting                 // Cài đặt ánh sáng, hiệu ứng
+    /Resources                // Các tài nguyên tải động
+    /Scripts/Managers         // Các script quản lý toàn cục
+    /Scripts/Interfaces       // Các interface chung
+    /Scripts/Utilities        // Các hàm, tiện ích chung
