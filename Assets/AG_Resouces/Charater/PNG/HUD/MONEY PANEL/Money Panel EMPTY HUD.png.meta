@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Money Panel EMPTY HUD_0: -2861875621325148428
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

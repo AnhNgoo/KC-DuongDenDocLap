@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Helicopter_Screw03_0: -5497154381763270056
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

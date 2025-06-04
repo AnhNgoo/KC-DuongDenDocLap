@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Flamethrower HUD_0: 6364490538398942060
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

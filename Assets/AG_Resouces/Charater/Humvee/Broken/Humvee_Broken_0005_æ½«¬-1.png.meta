@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "Humvee_Broken_0005_\xE6\xBD\xAB\xAC-1_0": -9079542712357648043
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

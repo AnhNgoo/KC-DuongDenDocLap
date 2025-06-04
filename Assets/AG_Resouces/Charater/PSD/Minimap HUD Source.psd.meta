@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Minimap HUD Source_0: -4102012423234081160
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

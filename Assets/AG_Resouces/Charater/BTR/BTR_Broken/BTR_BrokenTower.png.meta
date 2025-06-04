@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BTR_BrokenTower_0: -7588021618304753503
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

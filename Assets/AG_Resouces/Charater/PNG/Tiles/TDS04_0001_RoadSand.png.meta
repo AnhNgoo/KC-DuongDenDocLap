@@ -197,7 +197,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      TDS04_0001_RoadSand_0: 8409579851802172328
+      TDS04_0001_RoadSand_1: -419896636725166316
+      TDS04_0001_RoadSand_2: 6025691044655447967
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

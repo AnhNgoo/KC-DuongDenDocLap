@@ -272,7 +272,13 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Test Logo_0: 1758953181161383650
+      Test Logo_1: -8163349619438782453
+      Test Logo_2: 20525086636297145
+      Test Logo_3: 3996524194569067001
+      Test Logo_4: -4226740344207751432
+      Test Logo_5: -7075878568016229970
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
