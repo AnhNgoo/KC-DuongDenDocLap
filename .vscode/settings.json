@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "DuongDenDocLap.sln"
+    "dotnet.defaultSolution": "KC-DuongDenDocLap.sln"
 }
