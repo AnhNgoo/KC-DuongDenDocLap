@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PanzerMove (1)_0: 6053966728817929115
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

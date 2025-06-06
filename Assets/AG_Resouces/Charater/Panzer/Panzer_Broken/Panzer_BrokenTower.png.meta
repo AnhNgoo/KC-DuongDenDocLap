@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Panzer_BrokenTower_0: 5250362725776192642
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

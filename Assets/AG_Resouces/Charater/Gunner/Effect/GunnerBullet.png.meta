@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      GunnerBullet_0: 5991584875283542554
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

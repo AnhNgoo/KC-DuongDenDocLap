@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hero_GrenadeLauncher_0: 1157837127703415790
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

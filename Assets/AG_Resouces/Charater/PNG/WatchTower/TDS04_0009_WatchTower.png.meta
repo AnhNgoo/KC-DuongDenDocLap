@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      TDS04_0009_WatchTower_0: -5082605899174775212
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

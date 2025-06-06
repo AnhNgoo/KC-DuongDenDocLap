@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Ammo Icon_0: 1111351825686939332
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
