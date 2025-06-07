@@ -22,7 +22,7 @@ MonoBehaviour:
     applyColorToSubfolders: 1
     applyIconToSubfolders: 0
     materialColor: 0
-  - folderName: Scenes
+  - folderName: AG_Scenes
     folderColor: {r: 0.7254902, g: 0.10980393, b: 0.10980393, a: 1}
     fullPath: 
     icon: {fileID: 2800000, guid: b1ee8bc0ead99e240b28c5d73f73d9f0, type: 3}
