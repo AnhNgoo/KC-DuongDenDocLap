@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hero_Rifle_Empty_0: -8160102034910737572
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

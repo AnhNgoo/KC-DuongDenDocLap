@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Body Without Wings_0: 2459882550738212949
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BONUS Bomber Mini_0: 4592101736377187188
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
