@@ -34,7 +34,7 @@ public class SelectionBox : MonoBehaviour
 
         Rect selectionRect = new Rect(min, max - min);
 
-        SelectionManager.Instance.DeselectAll();
+
         Unit[] allUnits = FindObjectsOfType<Unit>();
         foreach (Unit unit in allUnits)
         {

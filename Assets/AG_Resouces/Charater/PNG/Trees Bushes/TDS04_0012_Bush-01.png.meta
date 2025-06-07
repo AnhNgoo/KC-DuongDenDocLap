@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      TDS04_0012_Bush-01_0: 5053919447080549964
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

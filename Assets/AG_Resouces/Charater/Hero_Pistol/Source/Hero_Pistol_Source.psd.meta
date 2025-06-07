@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hero_Pistol_Source_0: 7153998826639880257
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

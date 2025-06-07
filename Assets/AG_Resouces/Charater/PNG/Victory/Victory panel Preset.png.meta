@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Victory panel Preset_0: 6747909650181274283
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

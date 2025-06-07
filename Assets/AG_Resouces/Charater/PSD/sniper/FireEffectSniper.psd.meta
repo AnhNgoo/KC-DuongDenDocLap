@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FireEffectSniper_0: -1875463279344639604
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

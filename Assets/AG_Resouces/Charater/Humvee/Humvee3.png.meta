@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Humvee3_0: -3166530866110796468
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      TDS04_0015_Barrel-oil_0: 4319039845913187899
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

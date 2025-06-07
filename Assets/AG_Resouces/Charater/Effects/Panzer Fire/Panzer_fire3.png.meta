@@ -197,7 +197,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Panzer_fire3_0: 5762237174144905523
+      Panzer_fire3_1: -2968713794516974111
+      Panzer_fire3_2: 7148083689058482676
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
