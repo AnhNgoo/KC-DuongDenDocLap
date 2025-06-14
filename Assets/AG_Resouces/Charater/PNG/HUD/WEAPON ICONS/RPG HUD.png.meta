@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      RPG HUD_0: -2749027183335013749
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

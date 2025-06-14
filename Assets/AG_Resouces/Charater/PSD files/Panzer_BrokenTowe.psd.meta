@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Panzer_BrokenTowe_0: -8667246994756397744
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

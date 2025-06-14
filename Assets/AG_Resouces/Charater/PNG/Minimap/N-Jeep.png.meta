@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      N-Jeep_0: 1392076534997650111
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

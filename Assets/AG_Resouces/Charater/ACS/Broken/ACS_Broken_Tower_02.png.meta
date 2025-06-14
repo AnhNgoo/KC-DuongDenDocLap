@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ACS_Broken_Tower_02_0: -6823338096997890259
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

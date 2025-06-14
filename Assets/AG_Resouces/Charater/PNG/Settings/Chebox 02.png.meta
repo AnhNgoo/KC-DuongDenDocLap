@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Chebox 02_0: -9139010313961267220
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

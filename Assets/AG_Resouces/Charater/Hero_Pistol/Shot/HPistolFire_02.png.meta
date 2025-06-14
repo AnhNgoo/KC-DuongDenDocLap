@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      HPistolFire_02_0: -6377547556510146490
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
