@@ -2,12 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SettingsMenuManager : MonoBehaviour
 {
     public TMP_Dropdown graphicsDropdown;
     public Slider masterVol, musicVol, sfxVol;
     public AudioMixer mainAudioMixer;
+
+    public void PlayGame()
+    {
+        SceneManager.LoadScene("Scene 1");
+
+    }
 
     public void ChangeGraphicsQuality()
     {
@@ -25,16 +32,5 @@ public class SettingsMenuManager : MonoBehaviour
     public void ChangeSFXVolume()
     {
         mainAudioMixer.SetFloat("SFXVol", sfxVol.value);
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
