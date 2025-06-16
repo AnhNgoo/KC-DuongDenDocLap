@@ -87,6 +87,25 @@ public class PatrolManager : MonoBehaviour
         dwellTimer = Random.Range(minDwellTime, maxDwellTime);
     }
 
+    public bool UpdatePatrolWaiting()
+    {
+        if (isWaiting)
+        {
+            dwellTimer -= Time.deltaTime;
+            if (dwellTimer <= 0f)
+            {
+                isWaiting = false;
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+            }
+            return false; // vẫn đang chờ
+        }
+        return true; // đã có thể lấy điểm mới
+    }
+    public void ForceRestart()
+    {
+        isWaiting = false;
+        dwellTimer = 0f;
+    }
     void OnDrawGizmos()
     {
         // Vẽ khu vực tuần tra

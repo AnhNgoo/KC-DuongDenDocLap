@@ -69,25 +69,42 @@ public class EnemyAI : MonoBehaviour
         }
         else if (isChasingPlayer && target != null)
         {
-            agent.SetDestination(target.position);
             if (!IsTargetValid())
             {
                 isChasingPlayer = false;
                 target = null;
+
+                patrolManager.ForceRestart(); // ⬅️ GỌI Ở ĐÂY
+                patrolManager.OnReachPatrolPoint();
+                Vector3 nextPoint;
+                if (patrolManager.GetNextPatrolPoint(out nextPoint))
+                {
+                    agent.SetDestination(nextPoint);
+                }
+
+                return; // tránh chạy tiếp phần tuần tra bên dưới
+            }
+            else
+            {
+                agent.SetDestination(target.position);
             }
         }
+
         else
         {
-            // Tiếp tục tuần tra theo danh sách điểm
+            // Tiếp tục tuần tra nếu không đuổi theo player
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
-                patrolManager.OnReachPatrolPoint();
+                patrolManager.OnReachPatrolPoint(); // bắt đầu chờ
             }
 
-            Vector3 nextPoint;
-            if (patrolManager.GetNextPatrolPoint(out nextPoint))
+            if (patrolManager.UpdatePatrolWaiting()) // kiểm tra đã chờ xong chưa
             {
-                agent.SetDestination(nextPoint);
+                Vector3 nextPoint;
+                if (patrolManager.GetNextPatrolPoint(out nextPoint))
+                {
+                    agent.SetDestination(nextPoint);
+                }
             }
         }
 
@@ -97,6 +114,7 @@ public class EnemyAI : MonoBehaviour
             transform.up = agent.velocity.normalized;
         }
     }
+
 
     Transform DetectPlayer()
     {
@@ -132,9 +150,30 @@ public class EnemyAI : MonoBehaviour
     bool IsTargetValid()
     {
         if (target == null) return false;
+
         float distance = Vector2.Distance(transform.position, target.position);
-        return distance <= detectionRange;
+        if (distance > detectionRange) return false;
+
+        // Kiểm tra vật cản chắn giữa enemy và player
+        Vector2 directionToTarget = (target.position - transform.position).normalized;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToTarget, distance, obstacleLayer);
+
+        if (hit.collider != null)
+        {
+            // Có vật cản chắn giữa
+            return false;
+        }
+
+        // Kiểm tra xem player còn trong góc nhìn
+        float angleToTarget = Vector2.Angle(transform.up, directionToTarget);
+        if (angleToTarget > fovAngle * 0.5f)
+        {
+            return false;
+        }
+
+        return true;
     }
+
 
     void AlertNearbyEnemies(Transform target)
     {

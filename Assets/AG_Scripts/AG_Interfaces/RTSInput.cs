@@ -2,74 +2,58 @@ using UnityEngine;
 
 public class RTSInput : MonoBehaviour
 {
-    public LayerMask unitMask;
-    public Camera cam;
+    // Biến để gán Camera từ Inspector. Nếu không gán, sẽ tự động tìm Camera.main.
+    public Camera mainCamera; // Đổi tên từ 'cam' thành 'mainCamera' để rõ ràng hơn
 
-    private Vector3 mouseDownPos;
-    private bool isDragging = false;
+    private void Awake()
+    {
+        // Nếu chưa được gán trong Inspector, cố gắng tìm Camera chính trong scene.
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
 
-    [System.Obsolete]
+        // Kiểm tra sau khi tìm kiếm để đảm bảo có camera.
+        if (mainCamera == null)
+        {
+            Debug.LogError("RTSInput: Không tìm thấy Main Camera trong scene! Vui lòng đảm bảo có một camera được gắn thẻ 'MainCamera' hoặc gán thủ công vào Inspector.", this);
+            // Vô hiệu hóa script nếu không có camera để tránh lỗi NullReferenceException
+            enabled = false;
+        }
+    }
+
     private void Update()
     {
-        // Bắt đầu nhấn chuột trái
-        if (Input.GetMouseButtonDown(0))
+        // Đảm bảo có camera và MovementManager đã sẵn sàng trước khi xử lý input
+        if (mainCamera == null || MovementManager.Instance == null)
         {
-            mouseDownPos = Input.mousePosition;
-            isDragging = false;
+            return;
         }
 
-        // Kiểm tra kéo chuột
-        if (Input.GetMouseButton(0))
+        // --- Xử lý lệnh di chuyển bằng chuột phải ---
+        if (Input.GetMouseButtonDown(1)) // 1 là nút chuột phải
         {
+            // Lấy vị trí chuột trên màn hình
+            Vector3 mouseScreenPos = Input.mousePosition;
 
-            if (!isDragging && Vector3.Distance(mouseDownPos, Input.mousePosition) > 10f)
-            {
-                isDragging = true;
-                SelectionBox.Instance.StartSelectionBox();
-            }
+            // Chuyển đổi vị trí chuột từ không gian màn hình sang không gian thế giới.
+            // Giả định game bạn là 2D hoặc các đơn vị ở mặt phẳng Z = 0.
+            Vector3 targetWorldPos = mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, mainCamera.nearClipPlane));
+            targetWorldPos.z = 0f; // Đảm bảo vị trí Z là 0
+
+            MovementManager.Instance.IssueMoveCommand(targetWorldPos);
         }
 
-        // Nhả chuột trái
-        if (Input.GetMouseButtonUp(0))
+        // --- Xử lý lệnh bắn bằng chuột trái ---
+        if (Input.GetMouseButtonDown(0)) // 0 là nút chuột trái
         {
-            if (isDragging)
-            {
-                // Kết thúc kéo chọn
-                SelectionBox.Instance.EndSelectionBox();
-            }
-            else
-            {
-                // Raycast kiểm tra lính
-                RaycastHit2D hit = Physics2D.Raycast(cam.ScreenToWorldPoint(mouseDownPos), Vector2.zero, 100f, unitMask);
-                if (hit.collider != null)
-                {
-                    Unit unit = hit.collider.GetComponent<Unit>();
-                    if (unit != null)
-                    {
-                        // Không bỏ chọn cũ, chỉ thêm lính mới nếu chưa có
-                        SelectionManager.Instance.SelectUnit(unit);
-                    }
-                }
-                else
-                {
-                    // Click vào vùng trống => bỏ chọn tất cả
-                    SelectionManager.Instance.DeselectAll();
-                }
-            }
-        }
+            // Tương tự, lấy vị trí chuột và chuyển đổi sang không gian thế giới
+            Vector3 mouseScreenPos = Input.mousePosition;
+            Vector3 targetWorldPos = mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, mainCamera.nearClipPlane));
+            targetWorldPos.z = 0f; // Đảm bảo vị trí Z là 0
 
-        // Lệnh di chuyển bằng chuột phải
-        if (Input.GetMouseButtonDown(1))
-        {
-            Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
-            pos.z = 0f;
-            SelectionManager.Instance.IssueMoveCommand(pos);
-        }
-
-        // Hủy lệnh di chuyển bằng chuột giữa
-        if (Input.GetMouseButtonDown(2))
-        {
-            SelectionManager.Instance.CancelMoveCommand();
+            // Gọi IssueShootCommand thay vì IssueAttackCommand
+            MovementManager.Instance.IssueShootCommand(targetWorldPos);
         }
     }
 }

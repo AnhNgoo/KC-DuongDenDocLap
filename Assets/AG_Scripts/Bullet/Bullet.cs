@@ -2,39 +2,83 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    float bulletSpeed;// Tốc độ của viên đạn
-    float damage;
+    [Header("Bullet Settings")]
+    public float lifetime = 2f;
+    public LayerMask collisionLayers; // Layers the bullet can collide with (Enemy, Wall)
 
-    Rigidbody2D rb;
+    private Vector3 moveDirection;
+    private float moveSpeed;
+    private float damage;
 
-    public void Init(float bulletSpeed, float damage) // Khởi tạo các properties của viên đạn nếu cần thiết
+    private float currentLifetime;
+
+    private void Awake()
     {
-        this.bulletSpeed = bulletSpeed;
-        this.damage = damage;
-        // Có thể thêm các khởi tạo khác nếu cần
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
+        currentLifetime = lifetime;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Initializes the bullet with direction, speed, and damage.
+    /// </summary>
+    /// <param name="direction">The normalized direction of the bullet's movement.</param>
+    /// <param name="speed">The speed of the bullet.</param>
+    /// <param name="bulletDamage">The damage the bullet inflicts.</param>
+    public void Initialize(Vector3 direction, float speed, float bulletDamage)
     {
-        BulletForce();
-    }
+        moveDirection = direction.normalized;
+        moveSpeed = speed;
+        damage = bulletDamage;
 
-    void BulletForce()
-    {
-        rb.linearVelocity = transform.up * bulletSpeed;
-    }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.GetComponent<ITakeDamage>() != null)
+        if (direction != Vector3.zero)
         {
-            col.GetComponent<ITakeDamage>().TakeDamage(damage);
+            transform.up = direction;
+        }
+    }
+
+    private void Update()
+    {
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+
+        currentLifetime -= Time.deltaTime;
+        if (currentLifetime <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) // Or OnTriggerEnter if you're using 3D Colliders
+    {
+        HandleCollision(other.gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) // Or OnCollisionEnter if you're using 3D Colliders (and Rigidbody is not Is Kinematic)
+    {
+        HandleCollision(collision.gameObject);
+    }
+
+    private void HandleCollision(GameObject collidedObject)
+    {
+        // First, check if the collided object is on one of the designated collision layers.
+        if (((1 << collidedObject.layer) & collisionLayers) != 0)
+        {
+            // Now, check if the collided object has the "Enemy" tag.
+            if (collidedObject.CompareTag("Enemy"))
+            {
+                // Attempt to get the ITakeDamage interface from the collided object.
+                ITakeDamage damageable = collidedObject.GetComponent<ITakeDamage>();
+                if (damageable != null)
+                {
+                    // If it's an Enemy and has the ITakeDamage interface, apply damage.
+                    damageable.TakeDamage(damage);
+                    Debug.Log($"{collidedObject.name} received {damage} damage from the bullet.");
+                }
+                else
+                {
+                    Debug.LogWarning($"Bullet hit an object tagged 'Enemy' ({collidedObject.name}) but it does not have an ITakeDamage component!");
+                }
+            }
+            // The bullet should always be destroyed upon hitting anything on a valid collision layer,
+            // regardless of its tag, unless you specify other conditions (e.g., pass through walls).
             Destroy(gameObject);
         }
     }
