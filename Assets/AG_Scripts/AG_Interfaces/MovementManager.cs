@@ -1,17 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq; // Cần thiết cho OrderBy
-using UnityEngine.AI; // Cần thiết cho NavMesh
+using System.Linq;
+using UnityEngine.AI;
 
 public class MovementManager : MonoBehaviour
 {
     public static MovementManager Instance { get; private set; }
 
-    [Header("Formation Settings")]
-    [Tooltip("Khoảng cách giữa các đơn vị trong đội hình.")]
-    public float unitSpacing = 3f;
-
-    private List<Unit> allUnits = new List<Unit>(); // Giữ nguyên, quản lý TẤT CẢ đơn vị
+    private List<Unit> allUnits = new List<Unit>();
 
     private void Awake()
     {
@@ -26,6 +22,28 @@ public class MovementManager : MonoBehaviour
         // Tìm tất cả các Unit trong Scene khi khởi động
         allUnits.AddRange(FindObjectsByType<Unit>(FindObjectsSortMode.None));
         Debug.Log($"MovementManager: Tìm thấy {allUnits.Count} đơn vị trong Scene.");
+
+        // THAY ĐỔI MỚI: Tự động gán priority duy nhất cho mỗi đơn vị
+        ApplyUniqueUnitPriorities();
+    }
+
+    /// <summary>
+    /// Áp dụng priority duy nhất cho mỗi đơn vị.
+    /// Priority 0 là cao nhất, 99 là thấp nhất.
+    /// </summary>
+    private void ApplyUniqueUnitPriorities()
+    {
+        // Sắp xếp các đơn vị nếu muốn một thứ tự gán priority cụ thể (ví dụ: theo tên, theo khoảng cách ban đầu)
+        // Hiện tại, chúng ta chỉ lấy theo thứ tự FindObjectsByType trả về.
+        // allUnits = allUnits.OrderBy(unit => unit.name).ToList(); // Ví dụ sắp xếp theo tên
+
+        for (int i = 0; i < allUnits.Count; i++)
+        {
+            // Gán priority từ 0 đến 99. Nếu có nhiều hơn 100 đơn vị, các đơn vị còn lại sẽ nhận priority 99.
+            int priority = Mathf.Min(i, 99);
+            allUnits[i].SetAgentPriority(priority);
+            Debug.Log($"Đã đặt priority cho {allUnits[i].name} thành {priority}");
+        }
     }
 
     /// <summary>
@@ -41,8 +59,7 @@ public class MovementManager : MonoBehaviour
             return;
         }
 
-        // Dừng lệnh bắn của tất cả đơn vị trước khi di chuyển
-        foreach (Unit unit in allUnits) // Vẫn lặp qua allUnits
+        foreach (Unit unit in allUnits)
         {
             unit.StopShooting();
         }
@@ -59,42 +76,9 @@ public class MovementManager : MonoBehaviour
             return;
         }
 
-        // Sắp xếp các đơn vị theo khoảng cách đến mục tiêu để đơn vị gần nhất ở trung tâm đội hình
-        List<Unit> sortedUnits = allUnits.OrderBy(unit => Vector3.Distance(unit.transform.position, validTarget)).ToList(); // Vẫn lặp qua allUnits
-
-        IssueGridFormation(validTarget, sortedUnits, unitCount);
-    }
-
-    void IssueGridFormation(Vector3 centerTarget, List<Unit> units, int count)
-    {
-        if (count == 0) return;
-
-        int unitsPerRow = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(count)));
-        int numRows = Mathf.CeilToInt((float)count / unitsPerRow);
-
-        float startX = -((unitsPerRow - 1) * unitSpacing) / 2f;
-        float startY = -((numRows - 1) * unitSpacing) / 2f;
-
-        for (int i = 0; i < count; i++)
+        foreach (Unit unit in allUnits)
         {
-            int row = i / unitsPerRow;
-            int col = i % unitsPerRow;
-
-            float xOffset = startX + col * unitSpacing;
-            float yOffset = startY + row * unitSpacing;
-            Vector3 offset = new Vector3(xOffset, yOffset, 0f);
-
-            Vector3 destination = centerTarget + offset;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(destination, out hit, unitSpacing * 2f, NavMesh.AllAreas))
-            {
-                units[i].MoveTo(hit.position);
-            }
-            else
-            {
-                Debug.LogWarning($"MovementManager: Không tìm thấy điểm hợp lệ trên NavMesh cho đơn vị {units[i].name} tại {destination}. Đơn vị sẽ không di chuyển.");
-            }
+            unit.MoveTo(validTarget);
         }
     }
 
@@ -110,7 +94,7 @@ public class MovementManager : MonoBehaviour
             return;
         }
 
-        foreach (Unit unit in allUnits) // Vẫn lặp qua allUnits
+        foreach (Unit unit in allUnits)
         {
             unit.ShootAt(lookTarget);
         }
@@ -124,7 +108,4 @@ public class MovementManager : MonoBehaviour
     {
         return allUnits.AsReadOnly();
     }
-
-    // LOẠI BỎ TOÀN BỘ CÁC PHƯƠNG THỨC SAU: SelectUnit, DeselectUnit, ClearSelection
-    // Nếu bạn có các phương thức đó ở đây, hãy xóa chúng đi.
 }

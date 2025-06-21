@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,14 +6,13 @@ using System.Linq;
 
 public class Unit : MonoBehaviour
 {
-    public enum UnitType { Soldier, Tank, Helicopter } // THAY ĐỔI MỚI: Thêm Helicopter
+    public enum UnitType { Soldier, Tank }
 
     [Header("Unit Configuration")]
     public UnitType unitType = UnitType.Soldier;
 
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
-    [SerializeField] private float minDistance = 1f; // Khoảng cách tối thiểu giữa các đơn vị để dừng lại
     [SerializeField] private float rotationSpeed = 10f; // Tốc độ quay của thân/tháp pháo
 
     [Header("Combat Settings")]
@@ -25,7 +24,6 @@ public class Unit : MonoBehaviour
     private Vector3 targetPosition;
     private Vector3? lookTarget = null;
     private bool isMoving = false;
-    private bool isPaused = false;
     private bool isShooting = false;
     private NavMeshAgent agent; // Vẫn giữ NavMeshAgent cho Soldier/Tank
     private Coroutine shootLookResetCoroutine;
@@ -46,10 +44,6 @@ public class Unit : MonoBehaviour
                 Debug.LogWarning($"Unit: {gameObject.name} ({unitType}) không có NavMeshAgent. Di chuyển có thể không hoạt động đúng.");
             }
         }
-        else // Cho Helicopter, chúng ta sẽ không sử dụng NavMeshAgent
-        {
-            agent = null; // Đảm bảo agent là null cho Helicopter
-        }
 
         FindAndInitializeVisuals();
         UpdateVisuals();
@@ -61,11 +55,12 @@ public class Unit : MonoBehaviour
         if (agent != null) // Chỉ cấu hình agent nếu nó tồn tại (cho Soldier/Tank)
         {
             agent.speed = moveSpeed;
-            agent.stoppingDistance = 0.1f;
+            agent.stoppingDistance = 5f; // Giữ lại stoppingDistance 5f như code bạn cung cấp
             agent.updateRotation = false;
             agent.angularSpeed = 360f;
             agent.acceleration = 8f;
             agent.updateUpAxis = false;
+            // agent.priority được gán từ MovementManager.cs
         }
 
         // Đảm bảo unitShooter được gán
@@ -89,13 +84,7 @@ public class Unit : MonoBehaviour
         // Để đảm bảo NavMeshAgent được khởi tạo đúng trong Editor
         if ((unitType == UnitType.Soldier || unitType == UnitType.Tank) && GetComponent<NavMeshAgent>() == null)
         {
-            // Có thể cảnh báo người dùng cần thêm NavMeshAgent
             Debug.LogWarning($"Unit: {gameObject.name} (UnitType: {unitType}) cần một NavMeshAgent component.");
-        }
-        if (unitType == UnitType.Helicopter && GetComponent<NavMeshAgent>() != null)
-        {
-            // Có thể cảnh báo người dùng nên xóa NavMeshAgent
-            Debug.LogWarning($"Unit: {gameObject.name} (UnitType: {unitType}) không nên có NavMeshAgent component. Hãy xem xét xóa nó.");
         }
 
         if (unitVisuals.Count == 0 || unitVisuals.Values.Any(v => v == null)) // Kiểm tra cả null entries
@@ -111,9 +100,8 @@ public class Unit : MonoBehaviour
         unitVisuals.Clear();
         foreach (Transform child in transform)
         {
-            if (child.CompareTag("Unit")) // Nên dùng một tag cụ thể hơn cho visual, ví dụ "UnitVisual"
+            if (child.CompareTag("Unit"))
             {
-                // Sử dụng tên child để phân biệt loại UnitType
                 if (System.Enum.TryParse(child.name, out UnitType type))
                 {
                     unitVisuals[type] = child.gameObject;
@@ -128,7 +116,6 @@ public class Unit : MonoBehaviour
         if (unitVisuals.Count == 0) return;
         foreach (var visualEntry in unitVisuals)
         {
-            // Kiểm tra visualEntry.Value != null trước khi truy cập
             if (visualEntry.Value != null)
             {
                 bool shouldBeActive = visualEntry.Key == unitType;
@@ -166,43 +153,14 @@ public class Unit : MonoBehaviour
         {
             if (agent == null) return;
 
-            isPaused = ShouldPause(); // Kiểm tra xung đột với đơn vị khác
-            agent.isStopped = isPaused;
-
-            if (!isPaused)
-            {
-                agent.SetDestination(targetPosition);
-            }
-            else
-            {
-                agent.velocity = Vector3.zero; // Dừng hẳn khi bị tạm dừng
-            }
+            agent.SetDestination(targetPosition);
 
             // Kiểm tra xem đã đến đích chưa
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isMoving = false;
-                isPaused = false;
                 agent.isStopped = true;
                 agent.velocity = Vector3.zero;
-            }
-        }
-        // Xử lý di chuyển cho Helicopter (di chuyển trực tiếp)
-        else if (unitType == UnitType.Helicopter)
-        {
-            // Helicopter không bị dừng bởi va chạm với đồng đội trong ShouldPause() ở đây
-            // Nếu bạn muốn Helicopter tránh va chạm, cần implement logic riêng
-
-            // Tính toán hướng di chuyển
-            Vector3 directionToTarget = (targetPosition - transform.position).normalized;
-            // Di chuyển
-            transform.position += directionToTarget * moveSpeed * Time.deltaTime;
-
-            // Kiểm tra xem đã đến đích chưa (hoặc đủ gần)
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // Một ngưỡng nhỏ
-            {
-                isMoving = false;
-                transform.position = targetPosition; // Đảm bảo đến đúng vị trí
             }
         }
     }
@@ -218,16 +176,9 @@ public class Unit : MonoBehaviour
                 currentMoveDirection = agent.desiredVelocity.normalized;
             }
         }
-        else if (unitType == UnitType.Helicopter)
-        {
-            if (isMoving)
-            {
-                currentMoveDirection = (targetPosition - transform.position).normalized;
-            }
-        }
 
         // Xoay thân khi di chuyển hoặc không bắn
-        if (currentMoveDirection != Vector3.zero && (unitType == UnitType.Tank || unitType == UnitType.Helicopter || !isShooting))
+        if (currentMoveDirection != Vector3.zero && (unitType == UnitType.Tank || !isShooting))
         {
             RotateBody(currentMoveDirection);
         }
@@ -236,9 +187,9 @@ public class Unit : MonoBehaviour
         if (isShooting && lookTarget.HasValue)
         {
             Vector3 shootDirection = (lookTarget.Value - transform.position).normalized;
-            if (unitType == UnitType.Soldier || unitType == UnitType.Helicopter)
+            if (unitType == UnitType.Soldier)
             {
-                RotateBody(shootDirection); // Soldier và Helicopter xoay toàn bộ thân để bắn
+                RotateBody(shootDirection); // Soldier xoay toàn bộ thân để bắn
             }
             else if (unitType == UnitType.Tank)
             {
@@ -266,32 +217,10 @@ public class Unit : MonoBehaviour
         turretTransform.rotation = Quaternion.Slerp(turretTransform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
     }
 
-    // ShouldPause chỉ áp dụng cho đơn vị dùng NavMeshAgent
-    private bool ShouldPause()
-    {
-        if (MovementManager.Instance == null) return false;
-        if (unitType == UnitType.Helicopter) return false; // Helicopter không tạm dừng như Soldier/Tank
-
-        Vector3 moveDirection = (targetPosition - transform.position).normalized;
-        foreach (Unit otherUnit in MovementManager.Instance.GetAllUnits())
-        {
-            if (otherUnit != this && (otherUnit.unitType == UnitType.Soldier || otherUnit.unitType == UnitType.Tank))
-            {
-                Vector3 toOther = otherUnit.transform.position - transform.position;
-                if (toOther.magnitude < minDistance && Vector3.Angle(moveDirection, toOther) < 90f)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void MoveTo(Vector3 position)
     {
         targetPosition = position;
         isMoving = true;
-        isPaused = false;
         StopShooting();
 
         if (unitType == UnitType.Soldier || unitType == UnitType.Tank)
@@ -301,7 +230,6 @@ public class Unit : MonoBehaviour
                 agent.isStopped = false;
             }
         }
-        // Đối với Helicopter, không cần NavMeshAgent
     }
 
     /// <summary>
@@ -346,6 +274,18 @@ public class Unit : MonoBehaviour
         isShooting = false;
         lookTarget = null;
         shootLookResetCoroutine = null;
+    }
+
+    /// <summary>
+    /// Đặt priority cho NavMeshAgent của đơn vị này. Priority thấp hơn = ưu tiên cao hơn.
+    /// </summary>
+    /// <param name="priority">Giá trị priority từ 0-99.</param>
+    public void SetAgentPriority(int priority)
+    {
+        if (agent != null)
+        {
+            agent.avoidancePriority = Mathf.Clamp(priority, 0, 99); // Đảm bảo priority nằm trong khoảng hợp lệ
+        }
     }
     #endregion
 }
